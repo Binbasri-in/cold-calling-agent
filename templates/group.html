@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Group call
+{% endblock %}
+
+{% block main%}
+
+<!-- A big header that shows a big header-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Hello To the Call Center</h1>
+        </div>
+    </div>
+    <!-- make a POST request with the company details, product details, offers available, and additional instructions -->
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/group" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="company-details">Company Details:</label>
+                    <!-- add new line -->
+                    <br>
+                    <input type="text" class="form-control" name="company_details" disabled>
+                    <br>
+                    <label for="product-details">Product Details:</label>
+                    <br>
+                    <input type="text" class="form-control" id="product-details" name="product_details" disabled>
+                    <br>
+                    <label for="offers-available">Offers Available:</label>
+                    <br>
+                    <input type="text" class="form-control" id="offers-available" name="offers_available" disabled>
+                    <br>
+                    <label for="additional-instructions">Additional Instructions:</label>
+                    <br>
+                    <input type="text" class="form-control" id="additional-instructions" name="additional_instructions" disabled>
+                </div>
+                <div class="form-group">
+                    <!-- The CSV file share -->
+                    <label for="csv-file">CSV File:</label>
+                    <br>
+                    <input type="file" class="form-control-file" id="csv-file" name="csv_file">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}

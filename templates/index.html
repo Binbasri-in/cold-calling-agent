@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Main Page
+{% endblock %}
+
+{% block main%}
+
+<!-- A big header that shows a big header-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Hello To the Call Center</h1>
+        </div>
+    </div>
+    <!-- make a POST request with the company details, product details, offers available, and additional instructions -->
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/call" method="POST" id="main-form">
+                <div class="form-group" id="single-call">
+                    <label for="phone-number">Phone Number:</label>
+                    <br>
+                    <input type="text" class="form-control" id="phone-number" name="phone_number">
+                    <br>
+                    <label for="customer-name">Customer Name:</label>
+                    <br>
+                    <input type="text" class="form-control" id="customer-name" name="customer_name">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Make the Call</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
