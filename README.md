@@ -1,4 +1,4 @@
-# Cold Calling Agent
+# Cold Calling Agent (this was done before the latest update of OpenAI API with Assistant API)
 
 ## Overview
 
