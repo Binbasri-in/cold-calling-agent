@@ -35,8 +35,8 @@ def make_call(phone_number, greeting):
     # Make a call to the phone number with Gather speech
     call = client.calls.create(
         twiml=f"<Response><Gather language=\"en-US\" input=\"speech\" action=\"{request.url_root+'gather'}\" method=\"GET\"><Say language=\"en-US\" voice=\"Google.en-US-Neural2-C\">{greeting}</Say></Gather></Response>",
-        to="+917760735073",
-        from_="+12393448454"
+        to=phone_number,
+        from_=os.getenv('TWILIO_PHONE_NUMBER')
     )
     # Return the call sid
     return call.sid
