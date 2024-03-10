@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H5VAL6E)
+
 # Cold Calling Agent 
 
 #### (this was done before the latest update of OpenAI API with Assistant API)
