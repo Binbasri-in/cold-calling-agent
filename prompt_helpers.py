@@ -1,15 +1,27 @@
-from openai import OpenAI
 import os
 from customizable_parameters import company_details, product_details, offers_available, additional_instructions
 from dotenv import load_dotenv
+from getpass import getpass
+import requests
+
 load_dotenv()
 
-client = OpenAI(
-    api_key= os.getenv("OPENAI_API_KEY")
-)
+if "CLOUDFLARE_API_TOKEN" in os.environ:
+    api_token = os.environ["CLOUDFLARE_API_TOKEN"]
+else:
+    api_token = getpass("Enter you Cloudflare API Token")
+    
+if "CLOUDFLARE_ACCOUNT_ID" in os.environ:
+    account_id = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+else:
+    account_id = getpass("Enter your account id")
+
+model = "@cf/meta/llama-2-7b-chat-int8"
+
 
 previous_response = ""
 main_prompt = ""
+
 
 def generate_greeting(customer_name):
     global main_prompt
@@ -45,19 +57,23 @@ def generate_greeting(customer_name):
     """
 
     # generate greeting
-    greeting = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
-        prompt=greeting_prompt,
-        temperature=1,
-        max_tokens=150,
-        top_p=1,
+    response = requests.post(
+        f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model}",
+        headers={"Authorization": f"Bearer {api_token}"},
+        json={"messages": [
+            {"role": "system", "content": "follow the instructions and generate a text response to the prompt"},
+            {"role": "user", "content": greeting_prompt}
+        ]}
     )
 
-    previous_response = greeting.choices[0].text
+    inference = response.json()
+    text = inference["result"]["response"]
+    previous_response = text
     main_prompt = greeting_prompt + previous_response + "\n---------------------------------------------\ncustomer:"
 
-    print(greeting.choices[0].text)
-    return greeting.choices[0].text
+    print(text)
+    return text
+
 
 def understand_intent(user_input):
     # TODO: understand the user input using the OpenAI API
@@ -78,16 +94,20 @@ def understand_intent(user_input):
     ---------------------------------------------
     """
  
-    intention = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
-        prompt=intent_prompt,
-        temperature=0.9,
-        max_tokens=100,
-        top_p=1,
+    response = requests.post(
+        f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model}",
+        headers={"Authorization": f"Bearer {api_token}"},
+        json={"messages": [
+            {"role": "system", "content": "follow the instructions and generate a text response to the prompt"},
+            {"role": "user", "content": intent_prompt}
+        ]}
     )
 
-    print(intention.choices[0].text)
-    return intention.choices[0].text
+    inference = response.json()
+    text = inference["result"]["response"]
+    print(text)
+    return text
+
 
 def continue_conversation(user_input, intention):
     global main_prompt
@@ -95,15 +115,17 @@ def continue_conversation(user_input, intention):
 
     main_prompt += user_input + "\n---------------------------------------------\nyou:"
 
-    response = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
-        prompt=main_prompt,
-        temperature=0.9,
-        max_tokens=100,
-        top_p=1,
+    response = requests.post(
+        f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/{model}",
+        headers={"Authorization": f"Bearer {api_token}"},
+        json={"messages": [
+            {"role": "system", "content": "follow the instructions and generate a text response to the prompt"},
+            {"role": "user", "content": main_prompt}
+        ]}
     )
 
-    previous_response = response.choices[0].text
+    text = response.json()["result"]["response"]
+    previous_response = text
     main_prompt += previous_response + "\n---------------------------------------------\ncustomer:"
-    print(response.choices[0].text)
-    return response.choices[0].text
+    print(text)
+    return text
